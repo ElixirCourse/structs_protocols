@@ -1,21 +1,19 @@
-#HSLIDE
+---
 ## Структури и протоколи
 ![Image-Absolute](assets/title.jpg)
 
-#HSLIDE
+---
 ## Структури
 ![Image-Absolute](assets/structures.jpg)
 
-#HSLIDE
+---
 Структурите всъщност са речници(Map-ове), ограничени по няколко признака:
-- Ключовете им са атоми. Задължително атоми.
-- Ключовете им са предефинирани.
-- Много свойства на речниците не са валидни за структури.
-
-#HSLIDE
-- Структурите се дефинират в модул.
-- Структурата взема името на модула в който е дефинирана
-- може да даваме стойности по-подразбиране на някои ключове
+- Ключовете им са атоми. Задължително атоми.|
+- Ключовете им са предефинирани.|
+- Много свойства на речниците не са валидни за структури.|
+- Структурите се дефинират в модул.|
+- Структурата взема името на модула в който е дефинирана.|
+- Може да даваме стойности по-подразбиране на някои ключове.|
 
 ```elixir
 defmodule Person do
@@ -23,21 +21,28 @@ defmodule Person do
 end
 ```
 
-#HSLIDE
+---
 - Създаваме инстанция на структурата, е подобно на създаването `map`-ове
-- Разлика са:
-  - трябва да посочим името на структурта
-  - не можем да даваме ключове, които не са дефинирани в структурата
+- Разлика са:|
+  - трябва да посочим името на структурта|
 
 ```elixir
 iex> %Person{name: "Пешо", age: 35}
 %Person{age: 35, children: [], location: nil, name: "Пешо"}
+```
+---
+- Създаваме инстанция на структурата, е подобно на създаването `map`-ове
+- Разлика са
+  - трябва да посочим името на структурта
+  - не можем да даваме ключове, които не са дефинирани в структурата
+
+```elixir
 iex> %Person{full_name: "Пешо Гошов"}
 ** (KeyError) key :full_name not found in: %Person{...}
     (stdlib) :maps.update(:full_name, "Пешо Гошов", %Person{...})
 ```
 
-#HSLIDE
+---
 ```elixir
 iex> pesho = %Person{name: "Пешо", age: 35, children: "Нема"}
 %Person{age: 35, children: "Нема", location: nil, name: "Пешо"}
@@ -49,8 +54,9 @@ iex> map_size(pesho)
 @[1-2]
 @[3-4]
 @[5-6]
+@[1-2,5-6]
 
-#HSLIDE
+---
 ```elixir
 iex> inspect pesho, structs: false
 "%{
@@ -61,7 +67,7 @@ iex> inspect pesho, structs: false
 }"
 ```
 
-#HSLIDE
+---
 * Хубава новина е, че `Map` модулът работи със структури:
 
 ```elixir
@@ -71,7 +77,7 @@ iex> Map.put(pesho, :name, "Стойчо")
 }
 ```
 
-#HSLIDE
+---
 * Операторът за обновяване също работи:
 
 ```elixir
@@ -81,7 +87,7 @@ iex> %{pesho | name: "Стойчо"}
 }
 ```
 
-#HSLIDE
+---
 * Можем да съпоставяме структури с речници и други структури:
 
 ```elixir
@@ -93,7 +99,7 @@ iex> x
 "Пешо"
 ```
 
-#HSLIDE
+---
 ```elixir
 iex> %Person{name: x} = pesho
 %Person{
@@ -106,16 +112,16 @@ iex> %Person{} = %{}
 ** (MatchError) no match of right hand side value: %{}
 ```
 
-#HSLIDE
+---
 ### За какво и как да ползваме структури
 ![Image-Absolute](assets/types.jpg)
 
-#HSLIDE
+---
 * Структурите се дефинират в модул с идеята че са нещо като тип дефиниран от нас.
 * В модула би трябвало да напишем специални функции, които да работят с този тип.
 * Така имаме на едно място дефиницията на типа и функциите за работа с него.
 
-#HSLIDE
+---
 * Пример е `MapSet`:
 
 ```elixir
@@ -123,21 +129,21 @@ iex> inspect MapSet.new([2, 2, 3, 4]), structs: false
 "%{__struct__: MapSet, map: %{2 => true, 3 => true, 4 => true}}"
 ```
 
-#HSLIDE
+---
 ```elixir
 iex> MapSet.union(MapSet.new([1, 2, 3]), MapSet.new([2, 3, 4]))
 #MapSet<[1, 2, 3, 4]>
 ```
 
-#HSLIDE
+---
 ### Структурите НЕ СА класове
 ![Image-Absolute](assets/i_see.jpg)
 
-#HSLIDE
+---
 ## Протоколи
 ![Image-Absolute](assets/protocols.jpg)
 
-#HSLIDE
+---
 ### Дефиниране на протокол
 ```elixir
 defprotocol JSON do
@@ -146,7 +152,7 @@ defprotocol JSON do
 end
 ```
 
-#HSLIDE
+---
 ```elixir
 iex> JSON.encode(nil)
 ** (Protocol.UndefinedError) protocol JSON not implemented for nil
@@ -154,7 +160,7 @@ json_protocol.ex:1: JSON.impl_for!/1
 json_protocol.ex:3: JSON.encode/1
 ```
 
-#HSLIDE
+---
 * Протокол се имплементира с макрото `defimpl`.
 * Нека имплементираме `JSON` за атоми:
 
@@ -170,7 +176,7 @@ defimpl JSON, for: Atom do
 end
 ```
 
-#HSLIDE
+---
 ```elixir
 iex> JSON.encode(true)
 "true"
@@ -182,7 +188,7 @@ iex> JSON.encode(:name)
 ** (Protocol.UndefinedError)
 ```
 
-#HSLIDE
+---
 ```elixir
 defimpl JSON, for: BitString do
   def encode(<< >>), do: ~s("")
@@ -195,7 +201,7 @@ defimpl JSON, for: BitString do
 end
 ```
 
-#HSLIDE
+---
 ```elixir
 defimpl JSON, for: BitString do
   defp bitstring_to_list(binary) when is_binary(binary) do
@@ -207,7 +213,7 @@ end
 ```
 
 
-#HSLIDE
+---
 ```elixir
 defimpl JSON, for: BitString do
   defp list_of_bytes(<<>>, list), do: list |> Enum.reverse
@@ -223,7 +229,7 @@ end
 ```
 
 
-#HSLIDE
+---
 ```elixir
 iex> JSON.encode(:name)
 "\"name\""
@@ -235,7 +241,7 @@ iex> JSON.encode(<< 200, 201 >>)
 ** (Protocol.UndefinedError)
 ```
 
-#HSLIDE
+---
 ```elixir
 defimpl JSON, for: List do
   def encode(list) do
@@ -244,7 +250,7 @@ defimpl JSON, for: List do
 end
 ```
 
-#HSLIDE
+---
 ```elixir
 iex> JSON.encode([nil, true, false])
 "[null, true, false]"
@@ -252,20 +258,20 @@ iex> JSON.encode(<< 200, 201 >>)
 ** (Protocol.UndefinedError)
 ```
 
-#HSLIDE
+---
 ```elixir
 defimpl JSON, for: Integer do
   def encode(n), do: n
 end
 ```
 
-#HSLIDE
+---
 ```elixir
 iex> JSON.encode(<< 200, 201 >>)
 "[200, 201]"
 ```
 
-#HSLIDE
+---
 ```elixir
 defimpl JSON, for: Map do
   def encode(map) do
@@ -280,7 +286,7 @@ defimpl JSON, for: Map do
 end
 ```
 
-#HSLIDE
+---
 ```elixir
 iex> data = %{
   name: "Pesho",
@@ -291,7 +297,7 @@ iex> IO.puts JSON.encode(data)
 {...}
 ```
 
-#HSLIDE
+---
 ```json
 {
   "age": 43,
@@ -304,11 +310,11 @@ iex> IO.puts JSON.encode(data)
 }
 ```
 
-#HSLIDE
+---
 ### Структури и протоколи
 ![Image-Absolute](assets/adapters.jpeg)
 
-#HSLIDE
+---
 ```elixir
 defmodule Man do
   defstruct [:name, :age, :likes]
@@ -323,7 +329,7 @@ JSON.encode(kosta)
 ** (Protocol.UndefinedError)
 ```
 
-#HSLIDE
+---
 Вградените типове за които можем да имплементираме протокол са:
 * `Atom`
 * `BitString`
@@ -331,7 +337,7 @@ JSON.encode(kosta)
 * `Function`
 * `Integer`
 
-#HSLIDE
+---
 * `List`
 * `Map`
 * `PID`
@@ -339,7 +345,7 @@ JSON.encode(kosta)
 * `Reference`
 * `Tuple`
 
-#HSLIDE
+---
 * Има и начин да имплементираме протокол за всички случаи за които не е имплементиран,
 използвайки `Any`:
 
@@ -349,13 +355,13 @@ defimpl JSON, for: Any do
 end
 ```
 
-#HSLIDE
+---
 ```elixir
 JSON.encode(kosta)
 ** (Protocol.UndefinedError)
 ```
 
-#HSLIDE
+---
 ```elixir
 defmodule Man do
   @derive JSON
@@ -369,7 +375,7 @@ JSON.encode(nikodim)
 "null"
 ```
 
-#HSLIDE
+---
 ```elixir
 defprotocol JSON do
   @fallback_to_any true
@@ -384,7 +390,7 @@ iex> JSON.encode({:ok, :KO})
 "null"
 ```
 
-#HSLIDE
+---
 ## Протоколи идващи с езика
 ```elixir
 iex> path = :code.lib_dir(:elixir, :ebin)
@@ -392,14 +398,14 @@ iex> Protocol.extract_protocols([path])
 [Collectable, Inspect, String.Chars, List.Chars, Enumerable]
 ```
 
-#HSLIDE
+---
 * `Collectable` - това е протоколът, използван от `Enum.into`.
 * `Inspect` - използва се за _pretty printing_.
 * `String.Chars` - `Kernel.to_string/1` го използва.
 * `List.Chars` - `Kernel.to_charlist/1` го използва.
 * `Enumerable` - `Enum` методите очакват имплементации.
 
-#HSLIDE
+---
 ```elixir
 iex>Protocol.extract_impls(Enumerable, [path])
 [
@@ -409,7 +415,7 @@ iex>Protocol.extract_impls(Enumerable, [path])
 ]
 ```
 
-#HSLIDE
+---
 ```elixir
 defimpl Enumerable, for: BitString do
   def count(str), do: {:ok, String.length(str)}
@@ -428,7 +434,7 @@ defimpl Enumerable, for: BitString do
 end
 ```
 
-#HSLIDE
+---
 ```elixir
 "Далия"
 |> Enum.filter(fn
@@ -439,9 +445,9 @@ end
 "Для"
 ```
 
-#HSLIDE
+---
 ### Консолидация
 ![Image-Absolute](assets/consolidation.png)
 
-#HSLIDE
+---
 ## Край
