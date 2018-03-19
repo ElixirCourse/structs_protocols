@@ -284,29 +284,19 @@ iex> JSON.encode(:name)
 defimpl JSON, for: BitString do
   def encode(<< >>), do: ~s("")
   def encode(str) do
-    cond do
-      String.valid?(str) -> ~s("#{str}")
-      true -> JSON.encode(bitstring_to_list(str))
+    if String.valid?(str) do
+      ~s("#{str}")
+    else
+      JSON.encode(bitstring_to_list(str))
     end
   end
-end
-```
 
----
-```elixir
-defimpl JSON, for: BitString do
   defp bitstring_to_list(binary) when is_binary(binary) do
     list_of_bytes(binary, [])
   end
 
   defp bitstring_to_list(bits), do: list_of_bits(bits, [])
-end
-```
 
-
----
-```elixir
-defimpl JSON, for: BitString do
   defp list_of_bytes(<<>>, list), do: list |> Enum.reverse
   defp list_of_bytes(<< x, rest::binary >>, list) do
     list_of_bytes(rest, [x | list])
@@ -318,7 +308,14 @@ defimpl JSON, for: BitString do
   end
 end
 ```
-
+@[2]
+@[3-9]
+@[4-5]
+@[6-8]
+@[11-13]
+@[17-20]
+@[15]
+@[22-25]
 
 ---
 ```elixir
