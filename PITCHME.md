@@ -8,61 +8,62 @@
 
 ---
 Една структура всъщност много приличат на `Map`, с няколко разлики:
-- Ключовете им са атоми. Задължително атоми.|
-- Ключовете им са предефинирани.|
+- Ключовете ѝ са атоми. Задължително атоми.|
+- Ключовете ѝ са предефинирани.|
 ---
 - Структурите се дефинират в модул.
-- Структурата взема името на модула в който е дефинирана.
-- Може да даваме стойности по-подразбиране на някoe поле на структурата.
-- Можем да направим някое поле задължително с модул атрибута `@enforce_keys`.
+- Структурата взема името на модула в който е дефинирана. |
+- Може да даваме стойности по-подразбиране на някoe поле на структурата. |
+- Можем да направим някое поле задължително с модул атрибута `@enforce_keys`. |
 ---
 #### Пример
 ```elixir
 defmodule Person do
   @enforce_keys [:name]
-  defstruct [:name, age: 20, :location, children: []]
+  defstruct [:name, :location, children: []]
 end
 ```
 ---
 
 #### Създаването на инстанция на структура, също е подобно на създаването `Map`
 ```elixir
-iex> %Person{name: "Пешо", age: 35, location: "Некаде", children: "Нема"}
-%Person{age: 35, children: "Нема", location: "Некаде", name: "Пешо"}
+iex> %Person{name: "Пешо", location: "Некаде", children: "Нема"}
+%Person{children: "Нема", location: "Некаде", name: "Пешо"}
 ```
 ---
 #### Разликите са
 - Ако пропуснем да дадем стойност на даден дефиниран ключ той ще получи стойността си по подразбиране
 - Ако няма дефинирана стойност по подразбиране, то стойността му ще е `nil`
 ```elixir
-iex> %Person{name: "Пешо", age: 35}
-%Person{age: 35, children: [], location: nil, name: "Пешо"}
+iex> %Person{name: "Пешо"}
+%Person{children: [], location: nil, name: "Пешо"}
 ```
 ---
 #### Разликите са
 - Ако не дадем стойност на ключ, който е обявен за задължителен получаваме грешка
 ```elixir
-iex> %Person{age: 16}
-** (ArgumentError) the following keys must also be given when building struct Person: [:name]
+iex> %Person{children: "Пет или шес'"}
+** (ArgumentError) the following keys must also be given when building
+                   struct Person: [:name]
 ```
 ---
 #### Разликите са
 - Не можем да даваме ключове, които не са дефинирани в структурата
 ```elixir
-iex> %Person{name: "Пешо", drinks: "Водка (Флирт)"}
+iex> %Person{name: "Пешо", drinks: "ВодKа"}
 ** (KeyError) key :drinks not found in: %Person{...}
-    (stdlib) :maps.update(:drinks, "Водка (Флирт)", %Person{...})
+    (stdlib) :maps.update(:drinks, "ВодKа", %Person{...})
 ```
 ---
 #### Нека се разровим малко
 
 ```elixir
-iex> pesho = %Person{name: "Пешо", age: 35, children: "Нема", lotaction: "НикАде"}
-%Person{age: 35, children: "Нема", location: "НикАде", name: "Пешо"}
+iex> pesho = %Person{name: "Пешо", children: "Нема", lotaction: "НикАде"}
+%Person{children: "Нема", location: "НикАде", name: "Пешо"}
 iex> is_map(pesho)
 true
 iex> map_size(pesho)
-5
+4
 ```
 @[1-2]
 @[3-4]
@@ -75,7 +76,6 @@ iex> map_size(pesho)
 iex> inspect pesho, structs: false
 "%{
   __struct__: Person,
-  age: 35,
   children: \"Нема\",
   location: \"НикАде\",
   name: \"Пешо\"
@@ -87,7 +87,7 @@ iex> inspect pesho, structs: false
 ```elixir
 iex> Map.put(pesho, :name, "Стойчо")
 %Person{
-  age: 35, children: Нема, location: "НикАде", name: "Стойчо"
+  children: Нема, location: "НикАде", name: "Стойчо"
 }
 ```
 ---
@@ -96,7 +96,7 @@ iex> Map.put(pesho, :name, "Стойчо")
 ```elixir
 iex> %{pesho | children: "Жената ги брои"}
 %Person{
-  age: 35, children: "Жената ги брои", location: "НикАде", name: "Пешо"
+  children: "Жената ги брои", location: "НикАде", name: "Пешо"
 }
 ```
 ---
@@ -153,13 +153,13 @@ iex> x
 ```elixir
 iex> %Person{location: x} = pesho
 iex> x
-"Никаде"
+"НикАде"
 ```
 ---
 
 #### Можем да съпоставяме структури с речници и други структури:
 
-```elixigit clone https://github.com/gitpitch/gitpitch.gitr
+```elixir
 iex> %Person{name: x} = %{name: "Гошо"}
 iex> x
 ???
@@ -177,12 +177,12 @@ iex> x
 ---
 
 #### Достъп до елементите на структура
-- Mожем да достъпваме елементите на структура с `.`
+- Mожем да достъпваме елементите на структура с `"."`
 ```elixir
 iex> pesho.name
 "Пешо"
 ```
-- Не mожем да достъпваме елементите на структура с `[]` |
+- Не mожем да достъпваме елементите на структура с `"[]"`
 ```elixir
 iex(4)> pesho[:name]
 ** (UndefinedFunctionError) function Person.fetch/2 is undefined
@@ -208,11 +208,9 @@ iex(4)> pesho[:name]
 - Примери за структури от стандартната бибиотека са:
   - MapSet
   - Time
-  - Regex
-  - Range
 ```elixir
-iex> inspect MapSet.new([2, 2, 3, 4]), structs: false
-"%{__struct__: MapSet, map: %{2 => true, 3 => true, 4 => true}}"
+iex> inspect MapSet.new([2, 2, 3]), structs: false
+"%{__struct__: MapSet, map: %{2 => true, 3 => true}}"
 iex> {:ok, time} = Time.new(12, 34, 56)
 iex> inspect time, structs: false
 "%{__struct__: Time, calendar: Calendar.ISO, hour: 12,
@@ -224,7 +222,8 @@ iex> inspect time, structs: false
   - Range
 ```elixir
 iex> inspect ~r("Red"), structs: false
-"%{__struct__: Regex, opts: \"\", re_pattern: {:re_pattern, 0, 0, 0, <<...>>},
+"%{__struct__: Regex, opts: \"\",
+   re_pattern: {:re_pattern, 0, 0, 0, <<...>>},
    re_version: \"8.41 2017-07-05\", source: \"\\\"Red\\\"\"}"
 iex> inspect 3..93, structs: false
 "%{__struct__: Range, first: 3, last: 93}"
@@ -236,13 +235,15 @@ iex> inspect 3..93, structs: false
 
 ---
 ### Дефиниране на протокол
+
+- Прави се с макрото `defprotocol`, като указваме кои функции деинира протокола
+
 ```elixir
 defprotocol JSON do
   @doc "Converts the given data to its JSON representation"
   def encode(data)
 end
 ```
-
 ---
 ```elixir
 iex> JSON.encode(nil)
@@ -250,10 +251,9 @@ iex> JSON.encode(nil)
 json_protocol.ex:1: JSON.impl_for!/1
 json_protocol.ex:3: JSON.encode/1
 ```
-
 ---
-* Протокол се имплементира с макрото `defimpl`.
-* Нека имплементираме `JSON` за атоми:
+- Протокол се имплементира с макрото `defimpl`.
+- Нека имплементираме `JSON` за атоми:
 
 ```elixir
 defimpl JSON, for: Atom do
