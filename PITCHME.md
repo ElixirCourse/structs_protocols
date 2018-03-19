@@ -136,7 +136,7 @@ iex> x
 
 ```elixir
 iex> pesho = %Person{name: "Пешо", children: "Нема",
-...> lotaction: "НикАде"}
+...>   lotaction: "НикАде"}
 %Person{children: "Нема", location: "НикАде", name: "Пешо"}
 ```
 ---
