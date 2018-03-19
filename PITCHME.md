@@ -9,8 +9,8 @@
 ---
 Една структура всъщност много прилича на `Map`, с няколко разлики:
 - Ключовете ѝ са атоми. |
-  - Задължително атоми! |
-- Ключовете ѝ са предефинирани.|
+- Задължително атоми! |
+- Ключовете ѝ са предварително дефинирани.|
 ---
 Дефиниране на структура:
 - Структурите се дефинират в модул.
@@ -192,8 +192,7 @@ iex> %Person{name: x} = %{name: "Гошо"}
 iex> x
 ** (CompileError) iex:1: undefined function x/0
 ```
-- %Person{name: x}                   = ... <=>
-  %{\_\_struct\_\_: Person, name: x} = ... |
+- %Person{name: x} = ... <=> %{\_\_struct\_\_: Person, name: x} = ... |
 - Това е дборе защото, така можем да проверяваме дали нещо е инстанция на дадена структура|
 ---
 
@@ -229,6 +228,7 @@ iex()> pesho[:name]
 - Примери за структури от стандартната бибиотека са:
   - MapSet
   - Time
+
 ```elixir
 iex> inspect MapSet.new([2, 2, 3]), structs: false
 "%{__struct__: MapSet, map: %{2 => true, 3 => true}}"
@@ -242,6 +242,7 @@ iex> inspect time, structs: false
 - Примери за структури от стандартната бибиотека са:
   - Regex
   - Range
+
 ```elixir
 iex> inspect ~r("Red"), structs: false
 "%{__struct__: Regex, opts: \"\",
