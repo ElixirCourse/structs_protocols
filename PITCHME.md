@@ -272,8 +272,31 @@ iex> inspect time, structs: false
 
 ---
 #### Дефиниране на протокол
+---
+### Но първо бърз краш курс за JSON
+---
+Прости JSNO типове:
 
-Дефинираме протокол с макроса `defprotocol`, като в блока оказвамем, кои са
+- null (това е и стойността му)|
+- boolean (false или true)|
+- number (2, 5.5, -12 и др.)|
+- string ("Пешо")|
+---
+Съставни JSNO типове:
+
+- array (нехомогенен списък от JSNO типове)|
+  - [1, null, [false, true]]|
+- object (мап с ключове стрингове и стойности произволен JSON тип)|
+  - {"name": "Пешо", "children": ["Гошо", "Ташо"], "location" : {"country": "БългариА", "city": "Карнобат"}}
+---
+Всеки JSNO тип е валиден JSON
+---
+Дефиниране на протокол:
+- използваме макроса defprotocol
+- в блок описваме даваме сигнатурите на функциите от протокола
+- можем да имплементираме протокола за произволен erlang тип
+---
+#### JSON encoder
 
 ```elixir
 defprotocol JSON do
@@ -282,6 +305,7 @@ defprotocol JSON do
 end
 ```
 ---
+
 ```elixir
 iex> JSON.encode(nil)
 ** (Protocol.UndefinedError) protocol JSON not implemented for nil
@@ -319,7 +343,7 @@ iex> JSON.encode(:name)
 ---
 ```elixir
 defimpl JSON, for: BitString do
-  def encode(<< >>), do: ~s("")
+  def encode(<< >>), do: ~s("") # <=> "\"\""
   def encode(str) do
     if String.valid?(str) do
       ~s("#{str}") # <=> "\"#{str}\""
@@ -352,6 +376,7 @@ end
 @[11-13,15]
 @[11-13]
 @[17-20]
+@[11-13,15]
 @[15]
 @[22-25]
 
