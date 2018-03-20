@@ -271,9 +271,9 @@ iex> inspect time, structs: false
 ![Image-Absolute](assets/protocols.jpg)
 
 ---
-Дефиниране на протокол:
+#### Дефиниране на протокол
 
-- Прави се с макрото `defprotocol`, като указваме кои функции деинира протокола
+Дефинираме протокол с макроса `defprotocol`, като в блока оказвамем, кои са
 
 ```elixir
 defprotocol JSON do
@@ -329,10 +329,10 @@ defimpl JSON, for: BitString do
   end
 
   defp bitstring_to_list(binary) when is_binary(binary) do
-    list_of_bytes(binary, [])
+    list_of_bytes(binary, [bytes:])
   end
 
-  defp bitstring_to_list(bits), do: list_of_bits(bits, [])
+  defp bitstring_to_list(bits), do: list_of_bits(bits, [bits:])
 
   defp list_of_bytes(<<>>, list), do: list |> Enum.reverse
   defp list_of_bytes(<< x, rest::binary >>, list) do
@@ -371,12 +371,13 @@ iex> JSON.encode(<< 200, 201 >>)
 ```elixir
 defimpl JSON, for: List do
   def encode(list) do
-    "[#{list |> Enum.map(&JSON.encode/1) |> Enum.join(", ")}]"
+    ~s([#{list |> Enum.map(&JSON.encode/1) |> Enum.join(", ")}])
   end
 end
 ```
 
 ---
+
 ```elixir
 iex> JSON.encode([nil, true, false])
 "[null, true, false]"
@@ -385,6 +386,7 @@ iex> JSON.encode(<< 200, 201 >>)
 ```
 
 ---
+
 ```elixir
 defimpl JSON, for: Integer do
   def encode(n), do: n
@@ -394,7 +396,7 @@ end
 ---
 ```elixir
 iex> JSON.encode(<< 200, 201 >>)
-"[200, 201]"
+"[\"bytes\", 200, 201]"
 ```
 
 ---
