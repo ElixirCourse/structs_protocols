@@ -140,7 +140,7 @@ iex> pesho = %Person{name: "Пешо", children: "Нема",
 %Person{children: "Нема", location: "НикАде", name: "Пешо"}
 ```
 ---
-#### Maчинг на Map и структура
+#### Мачинг на Map и структура
 
 ```elixir
 iex> %{children: x} = pesho
@@ -148,7 +148,7 @@ iex> x
 ???
 ```
 ---
-#### Maчинг на Map и структура
+#### Мачинг на Map и структура
 
 ```elixir
 iex> %{children: x} = pesho
@@ -190,7 +190,7 @@ iex> x
 iex> %Person{name: x} = %{name: "Гошо"}
 ** (MatchError) no match of right hand side value: %{name: "Гошо"}
 iex> x
-** (CompileError) iex:1: undefined function x/0
+** (CompileError) iex: undefined function x/0
 ```
 - %Person{name: x} = ... <=> %{\_\_struct\_\_: Person, name: x} = ... |
 - Това е дборе защото, така можем да проверяваме дали нещо е инстанция на дадена структура|
@@ -214,7 +214,7 @@ iex()> pesho[:name]
 ![Image-Absolute](assets/types.jpg)
 
 ---
-- Структурата се дефинира в модул с идеята, че е нещо като тип дефиниран от нас.
+- Структура се дефинира в модул с идеята, че е нещо като тип дефиниран от нас.
 - В модула обикновено слагаме функции, които да работят с този тип:|
   - такива които "конструира" инстанция на структрата по дадени аргументи |
   - или фунциим, които приемат инстанция на структурата, като първи акгумент |
@@ -225,34 +225,47 @@ iex()> pesho[:name]
 ![Image-Absolute](assets/i_see.jpg)
 
 ---
-- Примери за структури от стандартната бибиотека са:
-  - MapSet
-  - Time
+#### Примери за структури от стандартната бибиотека
+
+---
+Range
 
 ```elixir
-iex> inspect MapSet.new([2, 2, 3]), structs: false
-"%{__struct__: MapSet, map: %{2 => true, 3 => true}}"
+iex> range = 3..93
+3..93
+iex> inspect range, structs: false
+"%{__struct__: Range, first: 3, last: 93}"
+```
+---
+Regex
 
+```elixir
+iex> regex = ~r("Red")
+~r/"Red"/
+iex> inspect regex, structs: false
+"%{__struct__: Regex, opts: \"\",
+   re_pattern: {:re_pattern, 0, 0, 0, <<...>>},
+   re_version: \"8.41 2017-07-05\", source: \"\\\"Red\\\"\"}"
+```
+---
+ MapSet
+
+```elixir
+iex> set = MapSet.new([2, 2, 3])
+#MapSet<[2, 3]>
+iex> inspect set, structs: false
+"%{__struct__: MapSet, map: %{2 => true, 3 => true}}"
+```
+---
+Time
+
+```elixir
 iex> {:ok, time} = Time.new(12, 34, 56)
+{:ok, ~T[12:34:56]}
 iex> inspect time, structs: false
 "%{__struct__: Time, calendar: Calendar.ISO, hour: 12,
    microsecond: {0, 0}, minute: 34, second: 56}"
 ```
----
-- Примери за структури от стандартната бибиотека са:
-  - Regex
-  - Range
-
-```elixir
-iex> inspect ~r("Red"), structs: false
-"%{__struct__: Regex, opts: \"\",
-   re_pattern: {:re_pattern, 0, 0, 0, <<...>>},
-   re_version: \"8.41 2017-07-05\", source: \"\\\"Red\\\"\"}"
-
-iex> inspect 3..93, structs: false
-"%{__struct__: Range, first: 3, last: 93}"
-```
-
 ---
 ## Протоколи
 ![Image-Absolute](assets/protocols.jpg)
